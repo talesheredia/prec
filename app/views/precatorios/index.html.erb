@@ -1,0 +1,45 @@
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+<p id="notice"><%= notice %></p>
+
+<h1>Listing</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+<% prec = Precatorio.group(:posicao_cronologica).order(:id)#Precatorio.all
+      ha = Hash.new
+      prec.each do |p|
+        ha[p.created_at.in_time_zone("America/Sao_Paulo")] = p.posicao_cronologica
+      end
+   #line_chart ha, discrete: true, library: {curveType: "none", pointSize: 0}
+   #Precatorio.group_by_hour(:created_at).minimum(:posicao_cronologica).delete_if { |h,v| v == 0 }, discrete: true, library: {curveType: "none", pointSize: 0}
+      %>
+</br>
+Situação Atual: <%= Precatorio.last.situacao_atual %>
+</br>
+Localização: <%= Precatorio.last.localizacao %>
+</br>
+Posição: <%= Precatorio.group(:posicao_cronologica).order(:id) %>
+
+  <%= line_chart ha, discrete: false %>#, library: {curveType: "none", pointSize: 0}  %>
+<%= line_chart ha, discrete: true %>#, library: {curveType: "none", pointSize: 0}  %>
+
+    <!--<% @precatorios.each do |precatorio| %>-->
+      <!--<tr>-->
+        <!--<td><%= link_to 'Show', precatorio %></td>-->
+        <!--<td><%= link_to 'Edit', edit_precatorio_path(precatorio) %></td>-->
+        <!--<td><%= link_to 'Destroy', precatorio, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+      <!--</tr>-->
+    <!--<% end %>-->
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Prec', new_precatorio_path %>
